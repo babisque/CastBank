@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CastBank.Data;
 using CastBank.Models;
+using Core.Flash;
 
 namespace CastBank.Controllers
 {
     public class EmpresasController : Controller
     {
         private readonly CastBankContext _context;
+        private IFlasher f;
 
-        public EmpresasController(CastBankContext context)
+        public EmpresasController(CastBankContext context, IFlasher f)
         {
             _context = context;
+            this.f = f;
         }
 
         // GET: Empresas
@@ -56,10 +59,20 @@ namespace CastBank.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nome,CNPJ,EmprestimoAtivo")] Empresa empresa)
         {
+            foreach (var e in _context.Empresa)
+            {
+                if (e.CNPJ == empresa.CNPJ)
+                {
+                    f.Flash(Types.Danger, "Empresa já cadastrada", dismissable: true);
+                    return RedirectToAction("Index");
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(empresa);
                 await _context.SaveChangesAsync();
+                f.Flash(Types.Success, "Empresa criada com sucesso.", dismissable: true);
                 return RedirectToAction(nameof(Index));
             }
             return View(empresa);
@@ -111,6 +124,7 @@ namespace CastBank.Controllers
                         throw;
                     }
                 }
+                f.Flash(Types.Success, "Registro atualizado com sucesso", dismissable: true);
                 return RedirectToAction(nameof(Index));
             }
             return View(empresa);
@@ -142,6 +156,7 @@ namespace CastBank.Controllers
             var empresa = await _context.Empresa.FindAsync(id);
             _context.Empresa.Remove(empresa);
             await _context.SaveChangesAsync();
+            f.Flash(Types.Success, "Empresa deletada dos cadastros", dismissable: true);
             return RedirectToAction(nameof(Index));
         }
 
