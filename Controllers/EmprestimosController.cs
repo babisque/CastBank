@@ -74,6 +74,7 @@ namespace CastBank.Controllers
             {
                 empresa.EmprestimoAtivo = true;
                 _context.Add(emprestimo);
+                emprestimo.ValorParcelas = (emprestimo.Valor / emprestimo.Parcelas) + (emprestimo.Valor * 0.06);
                 await _context.SaveChangesAsync();
 
                 f.Flash(Types.Success, "Empréstimo realizado com sucesso", dismissable: true);

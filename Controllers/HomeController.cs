@@ -23,8 +23,6 @@ namespace CastBank.Controllers
 
         public IActionResult Index()
         {
-            f.Flash(Types.Success, "Flash message system for ASP.NET MVC Core", dismissable: true);
-            
             return View();
         }
 
