@@ -164,7 +164,13 @@ namespace CastBank.Controllers
         {
             var emprestimo = await _context.Emprestimo.FindAsync(id);
             var empresa = await _context.Empresa.FindAsync(emprestimo.EmpresaId);
-            empresa.EmprestimoAtivo = false;
+            
+            if (emprestimo.Parcelas >= 1)
+            {
+                f.Flash(Types.Danger, "Não é possível apagar empréstimo em aberto.", dismissable: true);
+                return RedirectToAction(nameof(Index));
+            }
+
             _context.Emprestimo.Remove(emprestimo);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

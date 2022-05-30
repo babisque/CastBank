@@ -1,13 +1,15 @@
 ﻿@model IEnumerable<CastBank.Models.Emprestimo>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Empréstimos";
 }
 
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-success">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+    </a>
 </p>
 <table class="table">
     <thead>
@@ -52,9 +54,15 @@
                 <span class="badge bg-@badge">@Html.DisplayFor(modelItem => item.Status)</span>
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">
+                    <i class="fa fa-pencil" aria-hidden="true" style=""></i>
+                </a> |
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-warning">
+                    <i class="fa fa-inbox" aria-hidden="true"></i>
+                </a> |
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                </a>
             </td>
         </tr>
 }
