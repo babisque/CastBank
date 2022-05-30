@@ -74,7 +74,7 @@ namespace CastBank.Controllers
             {
                 empresa.EmprestimoAtivo = true;
                 _context.Add(emprestimo);
-                emprestimo.ValorParcelas = (emprestimo.Valor / emprestimo.Parcelas) + (emprestimo.Valor * 0.06);
+                emprestimo.ValorParcelas = Math.Round((emprestimo.Valor / emprestimo.Parcelas) + (emprestimo.Valor * 0.06), 2);
                 await _context.SaveChangesAsync();
 
                 f.Flash(Types.Success, "Empréstimo realizado com sucesso", dismissable: true);
@@ -173,6 +173,27 @@ namespace CastBank.Controllers
         private bool EmprestimoExists(int id)
         {
             return _context.Emprestimo.Any(e => e.Id == id);
+        }
+
+        public async Task<IActionResult> ParcelaPaga(int? id)
+        {
+            var emprestimo = await _context.Emprestimo.FindAsync(id);
+            var empresa = await _context.Empresa.FindAsync(emprestimo.EmpresaId);
+
+            if (emprestimo.Parcelas <= 0)
+            {
+                f.Flash(Types.Danger, "Não há débito pendente referente a esse empréstimo", dismissable: true);
+                return RedirectToAction(nameof(Index));
+            }
+
+            emprestimo.Parcelas -= 1;
+            if (emprestimo.Parcelas == 0)
+            {
+                empresa.EmprestimoAtivo = false;
+                emprestimo.Status = "Pago";
+            }
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

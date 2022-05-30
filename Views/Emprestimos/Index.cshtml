@@ -21,7 +21,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Empresa)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -35,6 +37,19 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Empresa.CNPJ)
+            </td>
+            @{
+                        string badge = String.Empty;
+                        if(item.Status.ToString() == "Aberto")
+                        {
+                            badge = "warning";
+                        } else if (item.Status.ToString() == "Pago")
+                        {
+                            badge = "success";
+                        }
+                    }
+            <td>
+                <span class="badge bg-@badge">@Html.DisplayFor(modelItem => item.Status)</span>
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

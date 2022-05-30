@@ -28,9 +28,16 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Empresa.CNPJ)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Parcelas)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ValorParcelas)
+        </dd>
     </dl>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to List</a> |
+    <a asp-controller="Emprestimos" asp-action="ParcelaPaga" asp-route-id="@Model.Id" class="btn btn-success">Pagar parcela</a>
 </div>
